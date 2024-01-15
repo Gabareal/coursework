@@ -6,6 +6,7 @@ from firebase_admin import db,credentials
 
 cred = credentials.Certificate('credentials.json')
 firebase_admin.initialize_app(cred,{"databaseURL":'https://coursework-7e5bd-default-rtdb.asia-southeast1.firebasedatabase.app'})
+ref = db.reference("/")
 
 class LostAndFoundApp:
     def __init__(self):
@@ -44,15 +45,20 @@ class LostAndFoundApp:
         # Add labels and entry fields for other details (location, owner)
 
         def submit_report():
-            name = name_entry.get()
-            description = description_entry.get()
-            location = location_entry.get()
-            owner = owner_entry.get()
-            # Get other details from entry fields
+            #name = name_entry.get()
+            #description = description_entry.get()
+            #location = location_entry.get()
+            #owner = owner_entry.get()
             try:
-                item = itemNew(name, description,location,owner) # ... other details)
-                self.lost_database.append(item)
-                item = db.collection('lost_items').add(item)
+                #item = itemNew(name, description,location,owner) # ... other details)
+                #self.lost_database.append(item)
+                itemUpload = ref.child(name_entry.get())
+                itemUpload.set({
+                    'description': description_entry.get(),
+                    'location': location_entry.get(),
+                    'owner': owner_entry.get(),
+                    'isFound': False,
+                })
                 new_window.destroy()
             except ValueError as e:
                 messagebox.showerror("Error", str(e))
@@ -61,13 +67,21 @@ class LostAndFoundApp:
 
     def mark_as_found(self):
         try:
-            item_id = int(simpledialog.askstring("Mark as Found", "Enter item ID:"))
-            for item in self.lost_database:
-                if item.id == item_id:
-                    item.isFound = True
-                    messagebox.showinfo("Success", "Item marked as found!")
-                    return
-            messagebox.showerror("Error", "Item not found.")
+            #itemUpdate = ref.child('')
+            itemFound = str(simpledialog.askstring("Mark as Found", "Enter item name:"))
+            itemUpdate = ref.child(itemFound)
+            itemUpdate.update({
+                'isFound': True,
+            })
+            messagebox.showerror("Success!","Success! Item marked as found.")
+
+            # In-python database no longer needed
+            #for item in self.lost_database:
+            #    if item.id == item_id:
+            #        item.isFound = True
+            #        messagebox.showinfo("Success", "Item marked as found!")
+            #        return
+            #messagebox.showerror("Error", "Item not found.")
         except ValueError:
             messagebox.showerror("Error", "Invalid item ID.")
 
