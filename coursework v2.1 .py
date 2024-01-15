@@ -74,8 +74,6 @@ class LostAndFoundApp:
                 'isFound': True,
             })
             messagebox.showerror("Success!","Success! Item marked as found.")
-
-            # In-python database no longer needed
             #for item in self.lost_database:
             #    if item.id == item_id:
             #        item.isFound = True
@@ -89,26 +87,33 @@ class LostAndFoundApp:
         new_window = tk.Toplevel(self.main_window)
         new_window.title("Lost Items")
 
-        listbox = tk.Listbox(new_window)
-        for item in self.lost_database:
-            if not item.isFound:
-                listbox.insert(tk.END, str(item))
-        listbox.pack()
+        itemView =  ref.get()
+        for i in itemView.items():
+            print(i)
+        # KYAN put it so that it displays i
+
+        #listbox = tk.Listbox(new_window)
+        #for item in self.lost_database:
+        #    if not item.isFound:
+        #        listbox.insert(tk.END, str(item))
+        #listbox.pack()
+
 
     def quit_app(self):
         self.main_window.destroy()
 
-class itemNew:
-    def __init__(self, name, description, location, owner, isFound=False):  # Set default isFound value
-        self.id = 0  # Add an ID attribute for marking as found
-        self.isFound = isFound
-        self.name = name
-        self.description = description
-        self.location = location
-        self.owner = owner
+#class itemNew:
+    #def __init__(self, name, description, location, owner, isFound=False):  # Set default isFound value
+        #self.id = 0  # Add an ID attribute for marking as found
+        #self.isFound = isFound
+        #self.name = name
+        #self.description = description
+        #self.location = location
+        #self.owner = owner
 
-    def __str__(self):
-        return f"ID: {self.id}\n{self.name}\nDescription: {self.description}\nLast seen: {self.location}\nOwner: {self.owner}"
+    #def __str__(self):
+        #return f"ID: {self.id}\n{self.name}\nDescription: {self.description}\nLast seen: {self.location}\nOwner: {self.owner}"
 
 # Create app instance and start Tkinter event loop
 app = LostAndFoundApp()
+
